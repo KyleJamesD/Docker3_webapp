@@ -117,3 +117,34 @@ export async function POST(req: NextRequest) {
     }
   }
 
+export async function DELETE(req: NextRequest) {
+  try {
+    // Parse the studentID from the request body
+    const { studentID } = await req.json();
+
+    // Check if studentID is provided
+    if (!studentID) {
+      return NextResponse.json({ error: 'Missing studentID' }, { status: 400 });
+    }
+
+    // Create a delete query to remove the record by studentID
+    const deleteQuery = `
+      DELETE FROM student_info
+      WHERE "studentID" = $1
+      RETURNING *;`;
+
+    // Execute the query
+    const result = await pool.query(deleteQuery, [studentID]);
+
+    // Check if the student was found and deleted
+    if (result.rows.length === 0) {
+      return NextResponse.json({ error: 'Student not exists' }, { status: 404 });
+    }
+
+    // Respond with the deleted record
+    return NextResponse.json("Student deleted successfully", { status: 200 });
+  } catch (error) {
+    console.error('Delete error:', error);
+    return NextResponse.json({ error: 'Error deleting data from database' }, { status: 500 });
+  }
+}

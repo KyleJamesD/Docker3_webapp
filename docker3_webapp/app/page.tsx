@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import { useState } from "react";
 import DataDisplay from "./components/DataDisplay";
 import { DataItem } from "./api/utility/schema";
+import { deleteStudent } from "./api/utility/schema";
 
 export default function Home() {
 
@@ -34,6 +35,16 @@ export default function Home() {
     
   }
 
+  async function handleDeleteSubmit (event:any) {
+
+    event.preventDefault(); 
+      const  newStudent : deleteStudent = {
+        studentID : deletestudent,
+      }
+      await deleteStudent(newStudent);
+    
+  }
+
 const [studentID, setstudentID] = useState('');
 const [studentName, setstudentName] = useState('');
 const [course, setcourse] = useState('');
@@ -44,6 +55,7 @@ const [updatecourse, setupdatecourse] = useState('');
 const [updatepresentDate, setupdatepresentDate] = useState('');
 const [data, setData] = useState<DataItem[]>([]);
 const [loading, setLoading] = useState<boolean>(true);
+const [deletestudent, setdeletestudent] = useState('');
 
 const addStudent = async (student:{studentID:string;studentName:string;course:string;presentDate:string;}) => {
   
@@ -81,6 +93,38 @@ const addStudent = async (student:{studentID:string;studentName:string;course:st
 
   }
 };
+
+const deleteStudent = async (deletestudent:{studentID:string;}) => {
+  if (!deletestudent) {
+    alert("Please Fill in all required Fields!");
+  }
+try{
+  const res = await fetch('/api/route',{
+    method: 'DELETE',
+    headers: {
+      'content-Type': 'application/json',
+    },
+    body: JSON.stringify(deletestudent),
+  });
+  console.log('Response Status', res.status)
+  console.log('Response Status Text', res.statusText);
+  if(!res.ok){
+throw new Error ('Failed to insert data');
+  }
+  const newStudent = await res.json();
+        console.log('Response data:', newStudent);
+
+        await fetchData();
+        setupdatestudentID('')
+        setupdatestudentName('')
+        setupdatecourse('')
+        setupdatepresentDate('')
+        // await fetchData();
+
+}catch(error){
+console.log('Error Deleteing Student',error);
+}
+}
 
 const updateStudent = async (student:{studentID:string;studentName:string;course:string;presentDate:string;}) => {
       try {
@@ -201,7 +245,23 @@ const fetchData = async () => {
           <button className={styles.submitButton} type="submit">Update Student</button>
         </form>
         </div>
+
+        
+        <div>
+        <h1>Delete Student</h1>
+        <form onSubmit={handleDeleteSubmit} className={styles.addform}>
+          <label>
+          <input type="text" 
+          name="studentID" 
+          placeholder="Student ID"
+          value={deletestudent} 
+          onChange={(event) =>(setdeletestudent(event.target.value))}></input>
+          </label>
+          <button className={styles.submitButton} type="submit">Delete Student</button>
+        </form>
+        </div>
       </div>
+
       <DataDisplay data={data}setData={setData} loading={loading} setLoading={setLoading}></DataDisplay>
       <button className={styles.fetchButton} onClick={fetchData}>Fetch Data</button>
     </div>

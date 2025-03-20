@@ -4,3 +4,7 @@ export interface DataItem {
     course: string;
     presentDate: string;
   }
+
+  export interface deleteStudent {
+    studentID: string;
+  }
