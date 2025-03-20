@@ -1,0 +1,48 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.submitButton {
+  margin-top: 3vh;
+  height: 8vh;
+  width: 12vw;
+  font-size: large;
+  font-weight: bold;
+}
+
+.fetchButton {
+  margin-top: 3vh;
+  height: 8vh;
+  width: 12vw;
+  font-size: large;
+  font-weight: bold;
+}
+
+.submitButton:hover {
+background-color: rgb(20, 160, 20);
+}
+
+.fetchButton:hover {
+  background-color: rgb(13, 114, 182);
+  }
+
+
+  .formdiv{
+    display: flex;
+  }
+
+  .updateform {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .addform{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .updatestudentdiv{
+    margin-left: 60px;
+  }
